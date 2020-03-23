@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>bv2av.js Demo</title>
+    <script src="bv2av.js"></script>
+</head>
+
+<body>
+    <p>BV/AV号（AV号请输入纯数字）</p>
+    <input id="videoNumber" type="text">
+    <input id="submit" type="submit" value="转换">
+    <p>结果</p>
+    <input id="output" type="text" disabled>
+</body>
+
+<script>
+    document.getElementById("submit").addEventListener("click", function () {
+        var input = document.getElementById("videoNumber").value;
+        var output = "输入格式错误";
+        if(input.startsWith("BV"))
+        {
+            output = dec(input);
+        }
+        else if(parseInt(input).toString() != "NaN")
+        {
+            output = enc(input);
+        }
+        document.getElementById("output").value = output;
+    });
+</script>
+
+</html>
