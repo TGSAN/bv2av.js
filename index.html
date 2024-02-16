@@ -25,7 +25,7 @@
         }
         else if(parseInt(input).toString() != "NaN")
         {
-            output = enc(input);
+            output = enc(BigInt(input));
         }
         document.getElementById("output").value = output;
     });

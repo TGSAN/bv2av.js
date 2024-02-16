@@ -1,26 +1,49 @@
-const table = 'fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF';
-const s = [11, 10, 3, 8, 4, 6, 2, 9, 5, 7];
-const xor = 177451812n;
-const add = 100618342136696320n;
+const table = 'FcwAPNKTMug3GV5Lj7EJnHpWsx4tb8haYeviqBz6rkCy12mUSDQX9RdoZf';
+const max_avid = 1n << 51n;
+const base = 58n;
+const bvid_len = 12n;
+const xor = 23442827791579n;
+const mask = 2251799813685247n;
 
-var tr = [];
-for (var i = 0; i < 58; i++) {
+let tr = [];
+for (let i = 0; i < base; i++) {
     tr[table[i]] = i;
 }
 
-function dec(x) {
-    var r = 0n;
-    for (var i = 0; i < 10; i++) {
-        r += BigInt(tr[x[s[i]]]) * BigInt(58) ** BigInt(i);
+/**
+ * avid to bvid
+ * @param {bigint} avid
+ * @returns {string} bvid
+ */
+function enc(avid) {
+    let r = ['B', 'V'];
+    let idx = bvid_len - 1n;
+    let tmp = (max_avid | avid) ^ xor;
+    while (tmp !== 0n) {
+        r[idx] = table[tmp % base];
+        tmp /= base;
+        idx -= 1n;
     }
-    return Number((r - add) ^ xor);
+    [r[3], r[9]] = [r[9], r[3]];
+    [r[4], r[7]] = [r[7], r[4]];
+    return r.join('');
 }
 
-function enc(x) {
-    var x = (BigInt(x) ^ BigInt(xor)) + add;
-    var r = ['B', 'V'];
-    for (var i = 0; i < 10; i++) {
-        r[s[i]] = table[parseInt(Number(x / BigInt(58) ** BigInt(i) % BigInt(58)))];
+/**
+ * bvid to avid
+ * @param {string} bvid
+ * @returns {bigint} avid
+ */
+function dec(bvid) {
+    let r = bvid.split('');
+    [r[3], r[9]] = [r[9], r[3]];
+    [r[4], r[7]] = [r[7], r[4]];
+    let tmp = 0n;
+    for(let char of r.slice(3)) {
+        console.log(char)
+        let idx = BigInt(tr[char]);
+        tmp = tmp * base + idx;
     }
-    return r.join('');
+    let avid = (tmp & mask) ^ xor;
+    return avid;
 }
