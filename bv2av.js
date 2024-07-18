@@ -16,7 +16,7 @@ for (let i = 0; i < base; i++) {
  * @returns {string} bvid
  */
 function enc(avid) {
-    let r = ['B', 'V'];
+    let r = ['B', 'V', '1'];
     let idx = bvid_len - 1n;
     let tmp = (max_avid | avid) ^ xor;
     while (tmp !== 0n) {
